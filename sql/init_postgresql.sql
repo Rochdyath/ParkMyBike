@@ -95,6 +95,7 @@ GRANT SELECT ON weather TO bike_station_read;
 GRANT SELECT ON station_status TO bike_station_read;
 
 -- écriture
+GRANT INSERT ON station TO bike_station_write;
 GRANT INSERT ON weather TO bike_station_write;
 GRANT INSERT ON station_status TO bike_station_write;
 
