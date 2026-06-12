@@ -61,15 +61,6 @@ CREATE TABLE station_status (
 );
 
 -- ======================
--- CONSTRAINTS
--- ======================
-
--- anti doublon technique
-ALTER TABLE station_status
-ADD CONSTRAINT unique_station_time
-UNIQUE (station_id, status_timestamp);
-
--- ======================
 -- INDEX
 -- ======================
 
@@ -78,9 +69,6 @@ ON station_status(station_id);
 
 CREATE INDEX idx_station_status_timestamp
 ON station_status(status_timestamp);
-
-CREATE INDEX idx_station_status_station_time
-ON station_status(station_id, status_timestamp);
 
 -- ======================
 -- ROLES
@@ -119,24 +107,3 @@ GRANT USAGE ON SCHEMA public TO airflow;
 -- attribuer les rôles
 GRANT bike_station_read TO airflow;
 GRANT bike_station_write TO airflow;
-
--- -- ======================
--- -- REMPLIR TABLE STATION
--- -- ======================
-
--- CREATE TABLE station_json_import (
---     data JSONB
--- );
-
--- COPY station_json_import(data)
--- FROM '/data/stations.json'
--- WITH (FORMAT text);
-
--- INSERT INTO station (number, name, city, latitude, longitude)
--- SELECT
--- (data->>'number')::INT,
--- data->>'name',
--- 'lyon',
--- (data->>'latitude')::FLOAT,
--- (data->>'longitude')::FLOAT
--- FROM station_json_import;
