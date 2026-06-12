@@ -32,7 +32,7 @@ with DAG(
     )
 
     save_stations_info = PythonOperator(
-        task_id="save_new_stations",
+        task_id="save_stations_info",
         python_callable=save_stations_info,
         op_args=[transform_data.output],
     )

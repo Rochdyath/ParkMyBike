@@ -95,17 +95,14 @@ def transform_data(stations_raw):
     transformed_data = []
 
     with engine.connect() as conn:
-        # weather_id_stmt = select(weather_table.c.id).order_by(weather_table.c.weather_timestamp).limit(1)
-        # weather_id = conn.execute(weather_id_stmt).fetchone()[0]
-        weather_id = 0
-        print(weather_id)
+        weather_id_stmt = select(weather_table.c.id).order_by(weather_table.c.weather_timestamp).limit(1)
+        weather_id = conn.execute(weather_id_stmt).fetchone()[0]
         for station in stations_raw:
             print(station)
             station_id_stmt = select(station_table.c.id).where(
                 station_table.c.number == station["number"] and station_table.c.city == station["city"]
             )
             station_id = conn.execute(station_id_stmt).fetchone()[0]
-            print(station_id)
 
             station_record = {
                 "station_id": station_id,
@@ -116,7 +113,6 @@ def transform_data(stations_raw):
                 "available_bike": station.get("totalStands", {}).get("availabilities", {}).get("bikes"),
                 "status_timestamp": station.get("lastUpdate"),
             }
-            print(station_record)
 
             transformed_data.append(station_record)
 
