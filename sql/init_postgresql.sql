@@ -95,6 +95,7 @@ GRANT SELECT ON weather TO bike_station_read;
 GRANT SELECT ON station_status TO bike_station_read;
 
 -- écriture
+GRANT INSERT ON station TO bike_station_write;
 GRANT INSERT ON weather TO bike_station_write;
 GRANT INSERT ON station_status TO bike_station_write;
 
@@ -119,23 +120,23 @@ GRANT USAGE ON SCHEMA public TO airflow;
 GRANT bike_station_read TO airflow;
 GRANT bike_station_write TO airflow;
 
--- ======================
--- REMPLIR TABLE STATION
--- ======================
+-- -- ======================
+-- -- REMPLIR TABLE STATION
+-- -- ======================
 
-CREATE TABLE station_json_import (
-    data JSONB
-);
+-- CREATE TABLE station_json_import (
+--     data JSONB
+-- );
 
-COPY station_json_import(data)
-FROM '/data/stations.json'
-WITH (FORMAT text);
+-- COPY station_json_import(data)
+-- FROM '/data/stations.json'
+-- WITH (FORMAT text);
 
-INSERT INTO station (number, name, city, latitude, longitude)
-SELECT
-(data->>'number')::INT,
-data->>'name',
-'lyon',
-(data->>'latitude')::FLOAT,
-(data->>'longitude')::FLOAT
-FROM station_json_import;
+-- INSERT INTO station (number, name, city, latitude, longitude)
+-- SELECT
+-- (data->>'number')::INT,
+-- data->>'name',
+-- 'lyon',
+-- (data->>'latitude')::FLOAT,
+-- (data->>'longitude')::FLOAT
+-- FROM station_json_import;
