@@ -9,9 +9,7 @@ Projet : ParkMyBike
 """
 
 import requests
-from datetime import datetime
 from sqlalchemy import create_engine, Table, Column, Integer, Boolean, TIMESTAMP, Float, MetaData, insert
-# from sqlalchemy.exc import SQLAlchemyError
 from scripts.config import WEATHER_LAT, WEATHER_LON, WEATHER_URL, DB_URI
 
 
@@ -73,9 +71,6 @@ def save_weather(weather_data: dict):
     if not weather_data:
         raise ValueError("Aucune donnée météo à sauvegarder")
 
-    # Ajout d'un timestamp de sauvegarde (traçabilité)
-    # weather_data["fetched_at"] = datetime.utcnow()
-
     try:
         print(weather_data)
         engine = create_engine(DB_URI)
@@ -111,10 +106,3 @@ def save_weather(weather_data: dict):
     except Exception as e:
         print("Erreur lors de l'insertion :", str(e))
         return False
-
-
-# if __name__ == "__main__":
-#     weather = fetch_weather()
-#     if weather:
-#         save_weather(weather)
-#         print(weather)

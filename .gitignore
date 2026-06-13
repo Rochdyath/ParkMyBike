@@ -87,7 +87,6 @@ data/
 
 #Airflow
 airflow/logs
-airflow/plugins/scripts/config.py
 airflow/airflow*
 airflow/webserver_config.py
 

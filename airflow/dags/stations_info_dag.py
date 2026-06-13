@@ -1,4 +1,5 @@
 from airflow import DAG
+from airflow.models import Variable
 from airflow.operators.python import PythonOperator
 from datetime import datetime, timedelta
 
@@ -23,6 +24,7 @@ with DAG(
     fetch_stations_data = PythonOperator(
         task_id="fetch_station_list",
         python_callable=fetch_stations_data,
+        op_args=[Variable.get("JC_DECAUX_API_KEY")]
     )
 
     transform_data = PythonOperator(

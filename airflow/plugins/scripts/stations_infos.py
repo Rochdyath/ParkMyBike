@@ -10,8 +10,7 @@ Projet : ParkMyBike
 """
 
 import requests
-import json
-from scripts.config import CITY, API_KEY, BASE_URL, DB_URI
+from scripts.config import CITY, BASE_URL, DB_URI
 from sqlalchemy import create_engine, Table, Column, Integer, TIMESTAMP, Float, MetaData, insert, String, select, Boolean
 
 metadata = MetaData()
@@ -52,7 +51,7 @@ station_info_table = Table(
     Column("status_timestamp", TIMESTAMP)
 )
 
-def fetch_stations_data():
+def fetch_stations_data(API_KEY):
     """
     Récupère les données des stations vélo de lyon.
 

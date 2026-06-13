@@ -8,10 +8,10 @@ Projet : ParkMyBike
 """
 
 import requests
-from scripts.config import CITY, API_KEY, BASE_URL, DB_URI
-from sqlalchemy import create_engine, Table, Column, Integer, TIMESTAMP, Float, MetaData, insert, String, select
+from scripts.config import CITY, BASE_URL, DB_URI
+from sqlalchemy import create_engine, Table, Column, Integer, Float, MetaData, insert, String, select
 
-def fetch_lyon_stations():
+def fetch_lyon_stations(API_KEY):
     """
     Récupère la liste des stations de Lyon.
 
@@ -24,19 +24,13 @@ def fetch_lyon_stations():
         "apiKey": API_KEY
     }
 
-    try:
-        response = requests.get(BASE_URL, params=params, timeout=10)
+    response = requests.get(BASE_URL, params=params, timeout=10)
 
-        if response.status_code == 200:
-            return response.json()
+    if response.status_code == 200:
+        return response.json()
 
-        print(f"Erreur API stations : {response.status_code}")
-        return None
-
-    except requests.exceptions.RequestException as e:
-        print("Erreur lors de l'appel à l'API stations")
-        print(e)
-        return None
+    print(f"Erreur API stations : {response.status_code}")
+    return None
 
 def transform_data(stations_raw):
     """
@@ -114,14 +108,3 @@ def save_new_stations(station_list):
             conn.execute(insert_stmt)
 
     return True
-
-
-# if __name__ == "__main__":
-
-#     stations = fetch_lyon_stations()
-
-#     if stations:
-#         final_data = transform_data(stations)
-#         print(len(final_data))
-#     else:
-#         print("Données insuffisantes pour traitement")

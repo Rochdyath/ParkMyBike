@@ -1,4 +1,5 @@
 from airflow import DAG
+from airflow.models import Variable
 from airflow.operators.python import PythonOperator
 from datetime import datetime, timedelta
 
@@ -11,7 +12,7 @@ default_args = {
 }
 
 with DAG(
-    dag_id="station_list_daily",
+    dag_id="station_list",
     description="Collecte de la liste des stations de vélo de Lyon",
     default_args=default_args,
     start_date=datetime(2025, 1, 1),
@@ -23,6 +24,7 @@ with DAG(
     fetch_station_list = PythonOperator(
         task_id="fetch_station_list",
         python_callable=fetch_lyon_stations,
+        op_args=[Variable.get("JC_DECAUX_API_KEY")]
     )
 
     transform_data = PythonOperator(
