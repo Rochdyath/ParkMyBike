@@ -107,3 +107,18 @@ GRANT USAGE ON SCHEMA public TO airflow;
 -- attribuer les rôles
 GRANT bike_station_read TO airflow;
 GRANT bike_station_write TO airflow;
+
+-- ======================
+-- UTILISATEUR METABASE
+-- ======================
+
+CREATE USER metabase_user WITH PASSWORD 'metabase_pass';
+
+-- accès à la base bike_station
+GRANT CONNECT ON DATABASE bike_station TO metabase_user;
+
+-- accès au schema public
+GRANT USAGE ON SCHEMA public TO metabase_user;
+
+-- attribuer les rôles
+GRANT bike_station_read TO metabase_user;
