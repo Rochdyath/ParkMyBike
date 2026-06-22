@@ -8,7 +8,7 @@ Projet : ParkMyBike
 """
 
 import requests
-from scripts.config import CITY, BASE_URL, DB_URI
+from config import CITY, BASE_URL, DB_URI
 from sqlalchemy import create_engine, Table, Column, Integer, Float, MetaData, insert, String, select
 
 def fetch_lyon_stations(API_KEY):

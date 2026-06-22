@@ -10,7 +10,7 @@ Projet : ParkMyBike
 
 import requests
 from sqlalchemy import create_engine, Table, Column, Integer, Boolean, TIMESTAMP, Float, MetaData, insert
-from scripts.config import WEATHER_LAT, WEATHER_LON, WEATHER_URL, DB_URI
+from config import WEATHER_LAT, WEATHER_LON, WEATHER_URL, DB_URI
 
 
 def fetch_weather():
