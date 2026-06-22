@@ -8,8 +8,9 @@ services:
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      DB_USER_PASSWORD_AIRFLOW: ${DB_USER_PASSWORD_AIRFLOW}
+      DB_USER_PASSWORD_METABASE: ${DB_USER_PASSWORD_METABASE}
     volumes:
-    - ./data:/data
     - ./sql:/docker-entrypoint-initdb.d
 
   airflow-init:
@@ -18,9 +19,9 @@ services:
     depends_on:
       - postgres
     environment:
-      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres:5432/airflow
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:${DB_USER_PASSWORD_AIRFLOW}@postgres:5432/airflow
     command: >
-       bash -c "airflow db migrate && airflow users create --username admin --password admin --firstname Admin --lastname User --role Admin --email admin@example.com"
+       bash -c "airflow db migrate && airflow users create --username '${AIRFLOW_UI_USERNAME}' --password '${AIRFLOW_UI_PASSWORD}' --firstname '${AIRFLOW_UI_FIRSTNAME}' --lastname '${AIRFLOW_UI_LASTNAME}' --role Admin --email '${AIRFLOW_UI_EMAIL}'"
 
   airflow-webserver:
     image: pmb-airflow:latest
@@ -31,7 +32,7 @@ services:
     ports:
       - "8082:8080"
     environment:
-      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres:5432/airflow
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:${DB_USER_PASSWORD_AIRFLOW}@postgres:5432/airflow
       AIRFLOW__CORE__EXECUTOR: LocalExecutor
       AIRFLOW__LOGGING__REMOTE_LOGGING: "False"
       AIRFLOW__LOGGING__BASE_LOG_FOLDER: "/opt/airflow/logs"
@@ -47,7 +48,7 @@ services:
       airflow-init:
         condition: service_completed_successfully
     environment:
-      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres:5432/airflow
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:${DB_USER_PASSWORD_AIRFLOW}@postgres:5432/airflow
       AIRFLOW__CORE__EXECUTOR: LocalExecutor
       AIRFLOW__LOGGING__REMOTE_LOGGING: "False"
       AIRFLOW__LOGGING__BASE_LOG_FOLDER: "/opt/airflow/logs"
@@ -65,5 +66,22 @@ services:
       - ./metabase:/metabase-data
     environment:
       MB_DB_FILE: /metabase-data/metabase.db
+
+      # # 1. CRÉATION AUTOMATIQUE DU COMPTE ADMIN
+      # MB_SETUP_WIZARD_AUTO_RUN: "true"
+      # MB_SETUP_WIZARD_ADMIN_EMAIL: ${METABASE_ADMIN_EMAIL}
+      # MB_SETUP_WIZARD_ADMIN_PASSWORD: ${METABASE_ADMIN_PASSWORD}
+      # MB_SETUP_WIZARD_ADMIN_FIRST_NAME: ${METABASE_ADMIN_FIRSTNAME}
+      # MB_SETUP_WIZARD_ADMIN_LAST_NAME: ${METABASE_ADMIN_LASTNAME}
+      # MB_SETUP_WIZARD_COMPANY_NAME: "ParkMyBike"
+      
+      # 2. CONNEXION AUTOMATIQUE À VOTRE BASE POSTGRES
+      MB_DB_AUTOMATIC_CONN_TYPE: postgres
+      MB_DB_AUTOMATIC_CONN_NAME: "Lyon_bike_station"
+      MB_DB_AUTOMATIC_CONN_HOST: postgres
+      MB_DB_AUTOMATIC_CONN_PORT: 5432
+      MB_DB_AUTOMATIC_CONN_DBNAME: bike_station
+      MB_DB_AUTOMATIC_CONN_USER: metabase_user
+      MB_DB_AUTOMATIC_CONN_PASS: ${DB_USER_PASSWORD_METABASE}
     depends_on:
       - postgres
