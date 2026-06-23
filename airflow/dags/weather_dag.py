@@ -2,7 +2,7 @@ from airflow import DAG
 from airflow.operators.python import PythonOperator
 from datetime import datetime, timedelta
 
-from scripts.weather import fetch_weather, save_weather
+from weather import fetch_weather, save_weather
 
 default_args = {
     "owner": "parkmybike",

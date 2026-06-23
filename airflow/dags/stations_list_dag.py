@@ -3,7 +3,7 @@ from airflow.models import Variable
 from airflow.operators.python import PythonOperator
 from datetime import datetime, timedelta
 
-from scripts.stations_list import fetch_lyon_stations, transform_data, save_new_stations
+from stations_list import fetch_lyon_stations, transform_data, save_new_stations
 
 default_args = {
     "owner": "parkmybike",

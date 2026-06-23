@@ -10,7 +10,7 @@ Projet : ParkMyBike
 """
 
 import requests
-from scripts.config import CITY, BASE_URL, DB_URI
+from config import CITY, BASE_URL, DB_URI
 from sqlalchemy import create_engine, Table, Column, Integer, TIMESTAMP, Float, MetaData, insert, String, select, Boolean
 
 metadata = MetaData()
