@@ -11,7 +11,7 @@ Projet : ParkMyBike
 
 import requests
 from config import CITY, BASE_URL, DB_URI
-from sqlalchemy import create_engine, Table, Column, Integer, TIMESTAMP, Float, MetaData, insert, String, select, Boolean
+from sqlalchemy import create_engine, Table, Column, Integer, TIMESTAMP, Float, MetaData, insert, String, select, Boolean, desc
 
 metadata = MetaData()
 
@@ -94,10 +94,10 @@ def transform_data(stations_raw):
     transformed_data = []
 
     with engine.connect() as conn:
-        weather_id_stmt = select(weather_table.c.id).order_by(weather_table.c.weather_timestamp).limit(1)
+        weather_id_stmt = select(weather_table.c.id).order_by(desc(weather_table.c.weather_timestamp)).limit(1)
         weather_id = conn.execute(weather_id_stmt).fetchone()[0]
+        print(weather_id)
         for station in stations_raw:
-            print(station)
             station_id_stmt = select(station_table.c.id).where(
                 station_table.c.number == station["number"] and station_table.c.city == station["city"]
             )

@@ -1,0 +1,15 @@
+name: CD Local Deployment
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+      - name: Lancer le script de déploiement Docker
+        run: |
+          /home/dyath/actions-runner/deploy.sh
