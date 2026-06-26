@@ -12,6 +12,7 @@ services:
       DB_USER_PASSWORD_METABASE: ${DB_USER_PASSWORD_METABASE}
     volumes:
     - ./sql:/docker-entrypoint-initdb.d
+    - postgres_data:/var/lib/postgresql/data
 
   airflow-init:
     image: pmb-airflow:latest
@@ -85,3 +86,6 @@ services:
       MB_DB_AUTOMATIC_CONN_PASS: ${DB_USER_PASSWORD_METABASE}
     depends_on:
       - postgres
+
+volumes:
+  postgres_data:
