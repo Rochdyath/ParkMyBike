@@ -13,6 +13,8 @@ services:
     volumes:
     - ./sql:/docker-entrypoint-initdb.d
     - postgres_data:/var/lib/postgresql/data
+    networks:
+      - pmb-network
 
   airflow-init:
     image: pmb-airflow:latest
@@ -23,6 +25,8 @@ services:
       AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:${DB_USER_PASSWORD_AIRFLOW}@postgres:5432/airflow
     command: >
        bash -c "airflow db migrate && airflow users create --username '${AIRFLOW_UI_USERNAME}' --password '${AIRFLOW_UI_PASSWORD}' --firstname '${AIRFLOW_UI_FIRSTNAME}' --lastname '${AIRFLOW_UI_LASTNAME}' --role Admin --email '${AIRFLOW_UI_EMAIL}'"
+    networks:
+      - pmb-network
 
   airflow-webserver:
     image: pmb-airflow:latest
@@ -41,6 +45,8 @@ services:
     volumes:
       - ./airflow/:/opt/airflow/
     command: airflow webserver
+    networks:
+      - pmb-network
   
   airflow-scheduler:
     image: pmb-airflow:latest
@@ -57,6 +63,8 @@ services:
     volumes:
       - ./airflow/:/opt/airflow/
     command: airflow scheduler
+    networks:
+      - pmb-network
     
   metabase:
     image: metabase/metabase:latest
@@ -86,6 +94,12 @@ services:
       MB_DB_AUTOMATIC_CONN_PASS: ${DB_USER_PASSWORD_METABASE}
     depends_on:
       - postgres
+    networks:
+      - pmb-network
 
 volumes:
   postgres_data:
+
+networks:
+  pmb-network:
+    driver: bridge
