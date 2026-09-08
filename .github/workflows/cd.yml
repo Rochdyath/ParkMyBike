@@ -1,14 +1,16 @@
 name: CD Local Deployment
 
 on:
-  push:
-    branches:
-      - main
+  workflow_run:
+    workflows: ["ParkMyBike CI Pipeline"] # Nom exact du 'name' dans ci.yaml
+    types:
+      - completed
 
 jobs:
   deploy:
     runs-on: self-hosted
 
+    if: ${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main' }}
     steps:
       - name: Lancer le script de déploiement Docker
         run: |

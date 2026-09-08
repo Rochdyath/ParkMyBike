@@ -67,7 +67,7 @@ services:
       - pmb-network
     
   metabase:
-    image: metabase/metabase:latest
+    image: metabase/metabase:v0.62.19
     container_name: metabase
     ports:
       - "3000:3000"
